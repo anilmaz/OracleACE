@@ -27,12 +27,12 @@ To get started, simply download the `tnsnames_builder.html` file and open it in 
 ## Example
 Here is an example of a generated `tnsnames.ora` entry:
 
-FREE =
+ANILRAC_ANILDBRAC =
   (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
+    (ADDRESS = (PROTOCOL = TCP)(HOST = anildbsys.sub06221914490.basedbvcn.oraclevcn.com)(PORT = 1521))
     (CONNECT_DATA =
       (SERVER = DEDICATED)
-      (SERVICE_NAME = FREE)
+      (SERVICE_NAME = ANILRAC_ANILDBRAC.sub06221914490.basedbvcn.oraclevcn.com)
     )
   )
 
