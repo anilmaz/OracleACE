@@ -31,11 +31,12 @@ To switch between light and dark modes, click the **Toggle Dark Mode** button at
 - The generated entries are formatted to match the standard `tnsnames.ora` structure.
 
 ## Example Entry
-ANILRAC_ANILDBRAC =
+
+FREE =
   (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = anildbsys.sub06221914490.basedbvcn.oraclevcn.com)(PORT = 1521))
+    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
     (CONNECT_DATA =
       (SERVER = DEDICATED)
-      (SERVICE_NAME = ANILRAC_ANILDBRAC.sub06221914490.basedbvcn.oraclevcn.com)
+      (SERVICE_NAME = FREE)
     )
   )
