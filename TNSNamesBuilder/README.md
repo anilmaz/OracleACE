@@ -27,15 +27,14 @@ To get started, simply download the `tnsnames_builder.html` file and open it in 
 ## Example
 Here is an example of a generated `tnsnames.ora` entry:
 
-ANILRAC_ANILDBRAC =
+FREE =
   (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = anildbsys.sub06221914490.basedbvcn.oraclevcn.com)(PORT = 1521))
+    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
     (CONNECT_DATA =
       (SERVER = DEDICATED)
-      (SERVICE_NAME = ANILRAC_ANILDBRAC.sub06221914490.basedbvcn.oraclevcn.com)
+      (SERVICE_NAME = FREE)
     )
   )
-
 ## Dark Mode
 To toggle dark mode, click the "Toggle Dark Mode" button at the top of the page. This will switch the theme between light and dark modes for better user experience.
 
