@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OraCanvas Help</title>
+  <link rel="icon" type="image/svg+xml" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/question-circle.svg"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      background: #f7fafd;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #23408e;
+      color: #fff;
+      padding: 2em 1em 1em 1em;
+      text-align: center;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 2px 12px rgba(35,64,142,0.07);
+    }
+    header h1 {
+      margin: 0 0 0.2em 0;
+      font-size: 2em;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    header .icon {
+      font-size: 2.2em;
+      vertical-align: middle;
+      margin-right: 0.3em;
+    }
+    main {
+      max-width: 700px;
+      margin: 2.5em auto 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(35,64,142,0.07);
+      padding: 2em 2em 2em 2em;
+    }
+    h2 {
+      color: #23408e;
+      margin-top: 1.5em;
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+    ul, ol {
+      margin-left: 1.5em;
+    }
+    code, pre {
+      background: #f0f3fa;
+      color: #23408e;
+      border-radius: 5px;
+      padding: 0.2em 0.5em;
+      font-size: 1em;
+    }
+    a {
+      color: #23408e;
+      text-decoration: underline;
+      transition: color 0.2s;
+    }
+    a:hover {
+      color: #1a2e5c;
+    }
+    @media (max-width: 700px) {
+      main {
+        max-width: 98vw;
+        padding: 1em 0.5em 1em 0.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="icon">&#x1F4D6;</span>
+    <h1>OraCanvas Help</h1>
+    <div style="font-size:1.1em; margin-top:0.5em;">Your Oracle Network Config Editor Guide</div>
+  </header>
+  <main>
+    <h2>What is OraCanvas?</h2>
+    <p>OraCanvas is a modern, user-friendly web app for editing, validating, and managing Oracle network configuration files: <b>TNSNAMES.ORA</b>, <b>SQLNET.ORA</b>, and <b>LISTENER.ORA</b>.</p>
+    <h2>How to Use</h2>
+    <ol>
+      <li><b>Select a tab</b> for the config file you want to work with.</li>
+      <li><b>Load Sample</b> to see example configurations for each file type.</li>
+      <li>Edit or paste your own config in the editor area.</li>
+      <li>Click <b>Validate</b> to check if your config matches the sample exactly. A green orb means valid; a red orb means invalid (and will auto-reset to the sample).</li>
+      <li>Use <b>Download</b> to save your validated config file.</li>
+      <li>Use <b>Clear</b> to empty the editor.</li>
+    </ol>
+    <h2>Features</h2>
+    <ul>
+      <li>Modern, accessible, and responsive UI</li>
+      <li>Strict validation against advanced Oracle config samples</li>
+      <li>Instant feedback with visual orbs</li>
+      <li>Easy download and management of config files</li>
+    </ul>
+    <h2>Need More?</h2>
+    <p>See the <a href="README.html" target="_blank">README</a> for technical details, or visit the <a href="https://github.com/anilmaz/OracleACE/tree/main/OraCanvas" target="_blank">project on GitHub</a>.</p>
+    <h2>About</h2>
+    <p>Created by <b>Anil Mahadev, Oracle ACE</b>.</p>
+  </main>
+</body>
+</html>
