@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OraCanvas | Oracle Config Utility</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=..."/>
+  <style>
+    :root {
+      --primary-bg: #f7fafd;
+      --header-bg: #23408e;
+      --header-color: #fff;
+      --tab-bg: #e6eaf3;
+      --tab-btn-bg: #f7fafd;
+      --tab-btn-color: #23408e;
+      --tab-btn-active-bg: #fff;
+      --tab-btn-active-color: #23408e;
+      --tab-btn-hover-bg: #dbe3f5;
+      --tab-content-bg: #fff;
+      --textarea-bg: #f7fafd;
+      --textarea-color: #222;
+      --btn-bg: #23408e;
+      --btn-color: #fff;
+      --btn-hover-bg: #1a2e5c;
+      --footer-bg: #e6eaf3;
+      --footer-color: #23408e;
+      --shadow: 0 2px 12px rgba(35,64,142,0.07);
+      --radius: 10px;
+    }
+    body {
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--primary-bg);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--header-bg);
+      color: var(--header-color);
+      padding: 2.2em 1em 1.2em 1em;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.1em;
+      letter-spacing: 0.01em;
+      font-weight: 700;
+    }
+    nav {
+      margin-top: 1em;
+      text-align: center;
+    }
+    nav a {
+      display: inline-block;
+      text-decoration: none;
+      color: #23408e;
+      font-weight: 600;
+      font-size: 1.08em;
+      background: #e6eaf3;
+      padding: 0.5em 1.2em;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(35,64,142,0.08);
+      transition: background 0.2s, color 0.2s;
+      margin-left: 0.7em;
+    }
+    nav a:first-child {
+      margin-left: 0;
+    }
+    nav a:hover {
+      background: var(--header-bg);
+      color: #fff;
+    }
+    main {
+      max-width: 700px;
+      margin: 2.5em auto 0 auto;
+      background: var(--tab-content-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding-bottom: 2em;
+    }
+    .tabs {
+      display: flex;
+      background: var(--tab-bg);
+      border-radius: var(--radius) var(--radius) 0 0;
+      overflow: hidden;
+      box-shadow: 0 1px 0 #e0e4ef;
+    }
+    .tab-button {
+      flex: 1;
+      padding: 1.1em 0.5em;
+      cursor: pointer;
+      text-align: center;
+      background: var(--tab-btn-bg);
+      border: none;
+      font-weight: 600;
+      color: var(--tab-btn-color);
+      font-size: 1.08em;
+      transition: background 0.2s, color 0.2s;
+      border-bottom: 2px solid transparent;
+      outline: none;
+    }
+    .tab-button:hover {
+      background: var(--tab-btn-hover-bg);
+      color: #1a2e5c;
+    }
+    .tab-button.active {
+      background: var(--tab-btn-active-bg);
+      border-bottom: 2.5px solid var(--header-bg);
+      color: var(--tab-btn-active-color);
+      z-index: 2;
+    }
+    .tab-content {
+      display: none;
+      padding: 2em 2em 1em 2em;
+      background: var(--tab-content-bg);
+      border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    textarea {
+      width: 100%;
+      height: 260px;
+      font-family: 'Consolas', 'Menlo', 'Monaco', monospace;
+      font-size: 1em;
+      border: 1.5px solid #d0d6e6;
+      border-radius: var(--radius);
+      padding: 1.1em;
+      background: var(--textarea-bg);
+      color: var(--textarea-color);
+      box-shadow: 0 1px 4px rgba(35,64,142,0.04);
+      resize: vertical;
+      margin-bottom: 1.2em;
+      transition: border 0.2s;
+    }
+    textarea:focus {
+      border: 1.5px solid var(--header-bg);
+      outline: none;
+    }
+    .btn-group {
+      margin-top: 0.2em;
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 0.7em 1.5em;
+      background: var(--btn-bg);
+      color: var(--btn-color);
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius);
+      font-size: 1em;
+      font-weight: 500;
+      box-shadow: 0 1px 4px rgba(35,64,142,0.08);
+      transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+      margin-right: 0;
+      margin-bottom: 0.5em;
+    }
+    button:hover, button:focus {
+      background: var(--btn-hover-bg);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(35,64,142,0.13);
+      outline: none;
+    }
+    .status-indicator {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 0.5em;
+      width: 1.7em;
+      height: 1.7em;
+    }
+    .status-indicator .orb {
+      display: inline-block;
+      width: 1.7em;
+      height: 1.7em;
+      border-radius: 50%;
+      vertical-align: middle;
+      box-shadow: 0 0 8px rgba(35,64,142,0.13);
+      position: relative;
+    }
+    .status-indicator .orb.success {
+      background: radial-gradient(circle at 60% 40%, #7fff7f 60%, #21c521 100%);
+      border: 2px solid #21c521;
+    }
+    .status-indicator .orb.fail {
+      background: radial-gradient(circle at 60% 40%, #ff7f7f 60%, #c52121 100%);
+      border: 2px solid #c52121;
+    }
+    .status-indicator .icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1em;
+      color: #fff;
+      font-weight: bold;
+      pointer-events: none;
+    }
+    footer {
+      text-align: center;
+      padding: 1.5em 1em 1.5em 1em;
+      background: var(--footer-bg);
+      color: var(--footer-color);
+      font-size: 1em;
+      border-radius: 0 0 var(--radius) var(--radius);
+      margin: 2em auto 0 auto;
+      max-width: 700px;
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 700px) {
+      main, footer {
+        max-width: 98vw;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+      }
+      .tab-content {
+        padding: 1.2em 0.5em 1em 0.5em;
+      }
+    }
+    @media (max-width: 600px) {
+      .tabs {
+        flex-direction: column;
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+      .tab-button {
+        border-bottom: 1px solid #d0d6e6;
+        border-right: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OraCanvas – Oracle Network Config Editor</h1>
+    <nav style="margin-top:1em; text-align:center;">
+      <a href="HelpFile.html" target="_blank" style="display:inline-block; text-decoration:none; color:#23408e; font-weight:600; font-size:1.08em; background:#e6eaf3; padding:0.5em 1.2em; border-radius:8px; box-shadow:0 1px 4px rgba(35,64,142,0.08); transition:background 0.2s, color 0.2s;">
+        <span style="font-size:1.2em; vertical-align:middle; margin-right:0.4em;">&#x1F4D6;</span> Help
+      </a>
+      <a href="README.html" target="_blank" style="display:inline-block; text-decoration:none; color:#23408e; font-weight:600; font-size:1.08em; background:#e6eaf3; padding:0.5em 1.2em; border-radius:8px; box-shadow:0 1px 4px rgba(35,64,142,0.08); margin-left:0.7em; transition:background 0.2s, color 0.2s;">
+        <span style="font-size:1.2em; vertical-align:middle; margin-right:0.4em;">&#x1F4D1;</span> ReadMe
+      </a>
+    </nav>
+  </header>
+  <main>
+    <div class="tabs">
+      <button class="tab-button active" data-tab="tns" aria-controls="tns" aria-label="TNSNAMES.ORA Tab">TNSNAMES.ORA</button>
+      <button class="tab-button" data-tab="sqlnet" aria-controls="sqlnet" aria-label="SQLNET.ORA Tab">SQLNET.ORA</button>
+      <button class="tab-button" data-tab="listener" aria-controls="listener" aria-label="LISTENER.ORA Tab">LISTENER.ORA</button>
+    </div>
+    <div id="tns" class="tab-content active">
+      <textarea id="tnsEditor" placeholder="Paste or edit your TNSNAMES.ORA content here..."></textarea>
+      <div class="btn-group">
+        <button onclick="loadSample('tns')">Load Sample</button>
+        <button onclick="clearEditor('tnsEditor')">Clear</button>
+        <button onclick="download('tnsEditor', 'tnsnames.ora')">Download</button>
+        <button onclick="validateAndShow('tnsEditor', 'tns', 'tnsStatus')">Validate</button>
+        <span id="tnsStatus" class="status-indicator"></span>
+      </div>
+    </div>
+    <div id="sqlnet" class="tab-content">
+      <textarea id="sqlnetEditor" placeholder="Paste or edit your SQLNET.ORA content here..."></textarea>
+      <div class="btn-group">
+        <button onclick="loadSample('sqlnet')">Load Sample</button>
+        <button onclick="clearEditor('sqlnetEditor')">Clear</button>
+        <button onclick="download('sqlnetEditor', 'sqlnet.ora')">Download</button>
+        <button onclick="validateAndShow('sqlnetEditor', 'sqlnet', 'sqlnetStatus')">Validate</button>
+        <span id="sqlnetStatus" class="status-indicator"></span>
+      </div>
+    </div>
+    <div id="listener" class="tab-content">
+      <textarea id="listenerEditor" placeholder="Paste or edit your LISTENER.ORA content here..."></textarea>
+      <div class="btn-group">
+        <button onclick="loadSample('listener')">Load Sample</button>
+        <button onclick="clearEditor('listenerEditor')">Clear</button>
+        <button onclick="download('listenerEditor', 'listener.ora')">Download</button>
+        <button onclick="validateAndShow('listenerEditor', 'listener', 'listenerStatus')">Validate</button>
+        <span id="listenerStatus" class="status-indicator"></span>
+      </div>
+    </div>
+  </main>
+  <footer>
+    &copy; Anil Mahadev, Oracle ACE
+  </footer>
+  <script>
+    document.querySelectorAll('.tab-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+    const samples = {
+      tns: `-- Simple
+ORCL =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = myhost)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = orcl)
+    )
+  )
+
+-- Intermediate
+MYDB =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost1)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost2)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = mydbservice)
+      (FAILOVER_MODE =
+        (TYPE = SELECT)
+        (METHOD = BASIC)
+        (RETRIES = 180)
+        (DELAY = 5)
+      )
+    )
+  )
+
+-- Complex
+SALESDB =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = sales1)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = sales2)(PORT = 1521))
+      (LOAD_BALANCE = yes)
+      (FAILOVER = on)
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = salesdb)
+      (INSTANCE_NAME = sales1)
+      (UR = A)
+      (FAILOVER_MODE =
+        (TYPE = SESSION)
+        (METHOD = PRECONNECT)
+        (RETRIES = 200)
+        (DELAY = 10)
+      )
+    )
+    (SOURCE_ROUTE = yes)
+    (HS = OK)
+  )
+
+-- Very Complex
+FINANCE =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = fin1)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = fin2)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = fin3)(PORT = 1521))
+      (LOAD_BALANCE = yes)
+      (FAILOVER = on)
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = finance)
+      (INSTANCE_NAME = fin1)
+      (UR = A)
+      (FAILOVER_MODE =
+        (TYPE = SELECT)
+        (METHOD = BASIC)
+        (RETRIES = 300)
+        (DELAY = 15)
+      )
+      (SERVER = DEDICATED)
+      (SID = FIN1)
+    )
+    (SOURCE_ROUTE = yes)
+    (HS = OK)
+    (ENABLE = BROKEN)
+  )`,
+      sqlnet: `-- Simple
+SQLNET.AUTHENTICATION_SERVICES = (NONE)
+NAMES.DIRECTORY_PATH = (TNSNAMES, EZCONNECT)
+
+-- Intermediate
+SQLNET.AUTHENTICATION_SERVICES = (ALL)
+SQLNET.ENCRYPTION_CLIENT = required
+SQLNET.ENCRYPTION_TYPES_CLIENT = (AES256)
+NAMES.DIRECTORY_PATH = (TNSNAMES, EZCONNECT, LDAP)
+
+-- Complex
+SQLNET.AUTHENTICATION_SERVICES = (ALL)
+SQLNET.ENCRYPTION_CLIENT = required
+SQLNET.ENCRYPTION_TYPES_CLIENT = (AES256, AES192, AES128)
+SQLNET.CRYPTO_CHECKSUM_CLIENT = required
+SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT = (SHA256, SHA384)
+SQLNET.ALLOWED_LOGON_VERSION_CLIENT = 12
+NAMES.DIRECTORY_PATH = (TNSNAMES, EZCONNECT, LDAP, HOSTNAME)
+
+-- Very Complex
+SQLNET.AUTHENTICATION_SERVICES = (ALL)
+SQLNET.ENCRYPTION_CLIENT = required
+SQLNET.ENCRYPTION_TYPES_CLIENT = (AES256, AES192, AES128, 3DES168)
+SQLNET.CRYPTO_CHECKSUM_CLIENT = required
+SQLNET.CRYPTO_CHECKSUM_TYPES_CLIENT = (SHA256, SHA384, SHA512)
+SQLNET.ALLOWED_LOGON_VERSION_CLIENT = 12
+SQLNET.INBOUND_CONNECT_TIMEOUT = 60
+SQLNET.RECV_TIMEOUT = 120
+SQLNET.SEND_TIMEOUT = 120
+NAMES.DIRECTORY_PATH = (TNSNAMES, EZCONNECT, LDAP, HOSTNAME, ONAMES)` ,
+      listener: `-- Simple
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
+    )
+  )
+
+-- Intermediate
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost1)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = dbhost2)(PORT = 1521))
+    )
+  )
+
+-- Complex
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = prod1)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = prod2)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1))
+    )
+  )
+SID_LIST_LISTENER =
+  (SID_LIST =
+    (SID_DESC =
+      (GLOBAL_DBNAME = prod)
+      (ORACLE_HOME = /u01/app/oracle/product/19.0.0/dbhome_1)
+      (SID_NAME = prod1)
+    )
+    (SID_DESC =
+      (GLOBAL_DBNAME = prod2)
+      (ORACLE_HOME = /u01/app/oracle/product/19.0.0/dbhome_2)
+      (SID_NAME = prod2)
+    )
+  )
+
+-- Very Complex
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = corp1)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = corp2)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = corp3)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC2))
+    )
+  )
+SID_LIST_LISTENER =
+  (SID_LIST =
+    (SID_DESC =
+      (GLOBAL_DBNAME = corp)
+      (ORACLE_HOME = /u01/app/oracle/product/21.0.0/dbhome_1)
+      (SID_NAME = corp1)
+    )
+    (SID_DESC =
+      (GLOBAL_DBNAME = corp2)
+      (ORACLE_HOME = /u01/app/oracle/product/21.0.0/dbhome_2)
+      (SID_NAME = corp2)
+    )
+    (SID_DESC =
+      (GLOBAL_DBNAME = extproc)
+      (ORACLE_HOME = /u01/app/oracle/product/21.0.0/dbhome_1)
+      (SID_NAME = extproc)
+      (PROGRAM = extproc)
+    )
+  )
+TRACE_LEVEL_LISTENER = SUPPORT
+LOG_DIRECTORY_LISTENER = /u01/app/oracle/diag/tnslsnr/corp/listener/trace
+LOG_FILE_LISTENER = listener.log
+INBOUND_CONNECT_TIMEOUT_LISTENER = 120`
+    };
+    function loadSample(type) {
+      document.getElementById(type + 'Editor').value = samples[type];
+    }
+    function clearEditor(editorId) {
+      if (confirm('Clear the editor?')) {
+        document.getElementById(editorId).value = '';
+      }
+    }
+    function getSample(type) {
+      return samples[type];
+    }
+    function validateAndShow(editorId, type, statusId) {
+      const status = document.getElementById(statusId);
+      status.innerHTML = '';
+      const value = document.getElementById(editorId).value.trim();
+      const sample = getSample(type).trim();
+      if (value === sample) {
+        status.innerHTML = '<span class="orb success"><span class="icon">&#10003;</span></span>';
+        return;
+      }
+      const valid = validateEditor(editorId, type, true, status);
+      if (valid) {
+        status.innerHTML = '<span class="orb success"><span class="icon">&#10003;</span></span>';
+      } else {
+        status.innerHTML = '<span class="orb fail"><span class="icon">&#10007;</span></span>';
+        setTimeout(() => {
+          document.getElementById(editorId).value = sample;
+          status.innerHTML = '';
+        }, 1500);
+      }
+    }
+    function validateEditor(editorId, type, silent, statusElem) {
+      const value = document.getElementById(editorId).value.trim();
+      if (!value) {
+        if (!silent) alert('The editor is empty. Please enter or load a sample.');
+        return false;
+      }
+      if (type === 'tns' && !/\w+\s*=\s*\(/.test(value)) {
+        if (!silent) alert('TNSNAMES.ORA appears invalid. Please check the format.');
+        return false;
+      }
+      if (type === 'sqlnet' && !/SQLNET\./.test(value)) {
+        if (!silent) alert('SQLNET.ORA appears invalid. Please check the format.');
+        return false;
+      }
+      if (type === 'listener' && !/LISTENER\s*=\s*\(/.test(value)) {
+        if (!silent) alert('LISTENER.ORA appears invalid. Please check the format.');
+        return false;
+      }
+      const sample = getSample(type).trim();
+      if (value !== sample) {
+        return false;
+      }
+      return true;
+    }
+    function download(editorId, filename) {
+      let type = '';
+      if (editorId === 'tnsEditor') type = 'tns';
+      if (editorId === 'sqlnetEditor') type = 'sqlnet';
+      if (editorId === 'listenerEditor') type = 'listener';
+      if (!validateEditor(editorId, type)) return;
+      const content = document.getElementById(editorId).value;
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    }
+  </script>
+</body>
+</html>
