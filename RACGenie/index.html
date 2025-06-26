@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle RAC IP Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <header class="main-header">
+            <h1>Oracle RAC IP Generator</h1>
+        </header>
+        <div class="container">
+          
+            <form id="racForm">
+                <div class="form-group">
+                    <label for="deploymentType">Deployment Type:
+                        <span class="tooltip" title="Choose between normal physical/virtual hosts or Kubernetes-based deployment.">?</span>
+                    </label>
+                    <select id="deploymentType" name="deploymentType">
+                        <option value="normal">Normal Hosts</option>
+                        <option value="k8s">Kubernetes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nodeCount">Node Count:
+                        <span class="tooltip" title="Set the number of RAC nodes. Range: 2-100 for normal hosts, 2-5000 for Kubernetes.">?</span>
+                    </label>
+                    <input type="number" id="nodeCount" name="nodeCount" min="2" max="100" value="2">
+                    <span id="nodeLimitInfo" class="info"></span>
+                </div>
+                <div class="form-group">
+                    <label for="oracleVersion">Oracle Version:
+                        <span class="tooltip" title="Select the Oracle Database version for your deployment. 23ai and 19c are LTS (Long Term Support).">?</span>
+                    </label>
+                    <select id="oracleVersion" name="oracleVersion">
+                        <option value="23ai">23ai (LTS, Production)</option>
+                        <option value="19c">19c (LTS, Production)</option>
+                        <option value="19.16">19.16+ (19c, for K8s)</option>
+                        <option value="21c">21c (Testing only)</option>
+                    </select>
+                    <span id="versionInfo" class="info"></span>
+                </div>
+                <fieldset style="margin: 18px 0; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px;">
+                    <legend>Network Settings <span class="tooltip" title="Configure the base IPs for each network type. These will be incremented for each node.">?</span></legend>
+                    <div class="form-group">
+                        <label for="hostnamePrefix">Hostname Prefix:
+                            <span class="tooltip" title="Prefix for each node's hostname, e.g., racnode1, racnode2.">?</span>
+                        </label>
+                        <input type="text" id="hostnamePrefix" name="hostnamePrefix" value="racnode">
+                    </div>
+                    <div class="form-group">
+                        <label for="publicBaseIp">Public Subnet Base IP:
+                            <span class="tooltip" title="Starting IP for the public network. Each node will increment the last octet.">?</span>
+                        </label>
+                        <input type="text" id="publicBaseIp" name="publicBaseIp" value="192.168.1.10">
+                    </div>
+                    <div class="form-group">
+                        <label for="privateBaseIp">Private Subnet Base IP:
+                            <span class="tooltip" title="Starting IP for the private interconnect. Each node will increment the last octet.">?</span>
+                        </label>
+                        <input type="text" id="privateBaseIp" name="privateBaseIp" value="10.0.0.10">
+                    </div>
+                    <div class="form-group">
+                        <label for="vipBaseIp">VIP Subnet Base IP:
+                            <span class="tooltip" title="Starting IP for the Virtual IPs. Each node will increment the last octet.">?</span>
+                        </label>
+                        <input type="text" id="vipBaseIp" name="vipBaseIp" value="192.168.1.110">
+                    </div>
+                    <div class="form-group">
+                        <label for="scanBaseIp">SCAN Subnet Base IP:
+                            <span class="tooltip" title="Starting IP for SCAN addresses. Each SCAN IP will increment the last octet.">?</span>
+                        </label>
+                        <input type="text" id="scanBaseIp" name="scanBaseIp" value="192.168.1.200">
+                    </div>
+                    <div class="form-group">
+                        <label for="scanCount">Number of SCAN IPs:
+                            <span class="tooltip" title="How many SCAN IPs to generate (typically 3 for production).">?</span>
+                        </label>
+                        <input type="number" id="scanCount" name="scanCount" min="1" max="5" value="3" disabled>
+                    </div>
+                </fieldset>
+                <button type="submit">Generate</button>
+            </form>
+            <div id="output">
+                <!-- Table and diagram will be rendered here -->
+            </div>
+        </div>
+        <script src="app.js"></script>
+        <footer class="main-footer">
+            &copy; Anil Mahadev - Oracle ACE
+        </footer>
+    </body>
+</html>
