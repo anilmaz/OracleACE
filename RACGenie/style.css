@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f7f9fa;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 32px 24px 24px 24px;
+}
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 32px;
+}
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+label {
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+input, select, button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #d0d7de;
+    font-size: 1rem;
+}
+input:focus, select:focus {
+    outline: 2px solid #0078d4;
+}
+button, #copyTableBtn {
+    background: #0078d4;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+    border-radius: 4px;
+}
+button:hover, #copyTableBtn:hover {
+    background: #c62828;
+    color: #fff;
+}
+.info {
+    font-size: 0.95em;
+    color: #888;
+    margin-top: 2px;
+}
+#output {
+    margin-top: 36px;
+}
+.rac-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 0.92em;
+    background: #fff;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 2px solid #c62828;
+}
+.rac-table th, .rac-table td {
+    padding: 7px 8px;
+    border: 1.5px solid #e53935;
+    text-align: center;
+    font-size: 0.92em;
+}
+.rac-table th {
+    background: #c62828;
+    color: #fff;
+    font-weight: 600;
+    border-bottom: 2px solid #c62828;
+}
+.rac-table tr:nth-child(even) {
+    background: #eaf4fb;
+}
+.rac-table tr:nth-child(odd) {
+    background: #fafdff;
+}
+.rac-table td {
+    border-bottom: 1px solid #d0e3f1;
+    font-family: 'Consolas', 'Menlo', 'Monaco', monospace;
+    font-size: 1.05em;
+}
+.rac-table tr:last-child td {
+    border-bottom: none;
+}
+#copyTableBtn {
+    background: #ffb300;
+    color: #222;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 18px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+}
+#copyTableBtn:hover {
+    background: #ff9800;
+}
+.table-responsive {
+    overflow-x: auto;
+}
+.main-header {
+    background: #c62828;
+    color: #fff;
+    padding: 32px 0 18px 0;
+    text-align: center;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 12px rgba(198,40,40,0.10);
+    margin-bottom: 32px;
+}
+.main-header h1 {
+    margin: 0;
+    font-size: 2.4em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    color: #fff;
+    font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+}
+.main-footer {
+    background: #1565c0;
+    color: #fff;
+    text-align: center;
+    padding: 18px 0 14px 0;
+    font-size: 1.1em;
+    font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+    letter-spacing: 0.5px;
+    border-radius: 18px 18px 0 0;
+    margin-top: 40px;
+    box-shadow: 0 -2px 12px rgba(21,101,192,0.10);
+}
+.tooltip {
+    display: inline-block;
+    background: #c62828;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 20px;
+    cursor: pointer;
+    margin-left: 6px;
+    position: relative;
+    vertical-align: middle;
+    box-shadow: 0 1px 4px rgba(198,40,40,0.10);
+}
+.tooltip[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 125%;
+    background: #222;
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 6px;
+    white-space: pre-line;
+    font-size: 0.98em;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    min-width: 180px;
+    max-width: 320px;
+    text-align: left;
+    pointer-events: none;
+}
+.tooltip[title]:hover {
+    z-index: 11;
+}
+@media (max-width: 600px) {
+    .container {
+        padding: 12px 4px;
+    }
+    .main-header {
+        padding: 18px 0 10px 0;
+        font-size: 1.2em;
+    }
+}
