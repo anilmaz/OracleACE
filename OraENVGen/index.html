@@ -1,1 +1,410 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle Environment Variable Generator</title>
+    <style>
+        :root {
+            --bg: #f4f6fb;
+            --container-bg: #fff;
+            --text: #2d3a4b;
+            --input-bg: #fff;
+            --input-border: #cfd8dc;
+            --button-bg: #0078d4;
+            --button-hover: #005fa3;
+            --copy-bg: #43b581;
+            --copy-hover: #36996b;
+            --error: #d32f2f;
+            --help-bg: #eaf1fb;
+            --help-color: #0078d4;
+        }
+        [data-theme="dark"] {
+            --bg: #181c23;
+            --container-bg: #232a36;
+            --text: #e3eaf7;
+            --input-bg: #232a36;
+            --input-border: #3a4250;
+            --button-bg: #2196f3;
+            --button-hover: #1565c0;
+            --copy-bg: #43b581;
+            --copy-hover: #2e7d5b;
+            --error: #ff6b6b;
+            --help-bg: #263245;
+            --help-color: #90caf9;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background 0.3s;
+        }
+        .container {
+            background: var(--container-bg);
+            margin-top: 60px;
+            padding: 40px 48px 32px 48px;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px rgba(220, 38, 38, 0.18), 0 4px 32px rgba(0,0,0,0.10);
+            max-width: 700px;
+            width: 100%;
+            transition: background 0.3s;
+            border: 2.5px solid #d32f2f;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 22px;
+            color: var(--text);
+            text-align: center;
+        }
+        label {
+            font-weight: 500;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+        }
+        .help-icon {
+            margin-left: 6px;
+            cursor: pointer;
+            color: var(--help-color);
+            font-size: 1.1em;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--help-bg);
+        }
+        .tooltip {
+            visibility: hidden;
+            background: #222;
+            color: #fff;
+            text-align: left;
+            border-radius: 5px;
+            padding: 7px 12px;
+            position: absolute;
+            z-index: 1;
+            font-size: 0.95em;
+            margin-top: 4px;
+            margin-left: 22px;
+            min-width: 180px;
+        }
+        .help-icon:hover + .tooltip {
+            visibility: visible;
+        }
+        select, button, textarea {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 18px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+            font-size: 1.08em;
+            background: var(--input-bg);
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+        }
+        button {
+            background: var(--button-bg);
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: var(--button-hover);
+        }
+        .copy-btn {
+            width: auto;
+            margin-top: 0;
+            margin-bottom: 18px;
+            float: right;
+            padding: 10px 22px;
+            font-size: 1em;
+            border-radius: 8px;
+            background: var(--copy-bg);
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background: var(--copy-hover);
+        }
+        textarea {
+            resize: none;
+            min-height: 100px;
+            max-height: 100px;
+            height: 100px;
+            font-family: 'Segoe UI', 'Arial', 'sans-serif';
+            font-size: 0.98em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .error {
+            color: var(--error);
+            font-size: 0.98em;
+            margin-bottom: 10px;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 18px;
+            right: 32px;
+            background: none;
+            border: none;
+            font-size: 1.3em;
+            cursor: pointer;
+            color: var(--text);
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            border-radius: 26px;
+            transition: background 0.3s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        input:checked + .slider {
+            background-color: #2196f3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+        .theme-icon {
+            font-size: 1.1em;
+            margin-left: 6px;
+            margin-right: 0;
+        }
+        @media (max-width: 800px) {
+            .container {
+                max-width: 98vw;
+                padding: 18px 4vw 18px 4vw;
+            }
+            .theme-toggle { right: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" id="theme-toggle">
+        <label class="toggle-switch">
+            <input type="checkbox" id="theme-switch">
+            <span class="slider"></span>
+        </label>
+        <span class="theme-icon" id="theme-icon">🌙</span>
+        <span id="theme-label" style="margin-left:8px;font-size:1em;user-select:none;">Light Mode</span>
+    </div>
+    <div class="container">
+        <h1>Oracle oraenv Generator</h1>
+        <label for="os-type">
+            Operating System
+            <span class="help-icon" tabindex="0" title="Choose the target operating system for your Oracle environment variables.">?</span>
+        </label>
+        <select id="os-type">
+            <option value="">-- Select OS --</option>
+            <option value="linux">Linux</option>
+            <option value="windows">Windows</option>
+        </select>
+        <label for="oracle-version">
+            Oracle Version
+            <span class="help-icon" tabindex="0" title="Select your Oracle Database version. This will determine the default environment variables.">?</span>
+        </label>
+        <select id="oracle-version">
+            <option value="">-- Select Version --</option>
+            <option value="12cR2">12c Release 2</option>
+            <option value="19c">19c</option>
+            <option value="21c">21c</option>
+            <option value="23ai">23ai</option>
+        </select>
+        <label for="oracle-base">
+            ORACLE_BASE
+            <span class="help-icon" tabindex="0" title="Choose the base directory for your Oracle installation. This will be used for Linux and Unix-based OSes.">?</span>
+        </label>
+        <select id="oracle-base">
+            <option value="">-- Select ORACLE_BASE --</option>
+            <option value="/u01/app/oracle">/u01/app/oracle</option>
+            <option value="/opt/oracle">/opt/oracle</option>
+        </select>
+        <div id="error-msg" class="error" style="display:none;"></div>
+        <button id="generate-btn">Generate oraenv</button>
+        <label for="output">
+            Generated oraenv
+            <span class="help-icon" tabindex="0" title="Copy and paste this into your .bash_profile or .bashrc to set Oracle environment variables.">?</span>
+        </label>
+        <button class="copy-btn" id="copy-btn" type="button">Copy</button>
+        <div id="copy-msg" class="error" style="display:none;"></div>
+        <textarea id="output" readonly placeholder="Your oraenv will appear here..."></textarea>
+    </div>
+    <footer style="text-align:center;margin:32px 0 12px 0;color:#d32f2f;font-weight:600;font-size:1.08em;letter-spacing:0.5px;">
+        &copy; Anil Mahadev - Oracle ACE
+    </footer>
+    <script>
+        const oraenvTemplates = {
+            '12cR2': (base, os) => getTemplate('12cR2', base, os),
+            '19c': (base, os) => getTemplate('19c', base, os),
+            '21c': (base, os) => getTemplate('21c', base, os),
+            '23ai': (base, os) => getTemplate('23ai', base, os)
+        };
+        function getTemplate(version, base, os) {
+            // Compose OS name for comment
+            let osName = os === 'windows' ? 'Windows' : 'Linux';
+            let versionLabel = '';
+            if (version === '12cR2') versionLabel = '12c Release 2';
+            else if (version === '19c') versionLabel = '19c';
+            else if (version === '21c') versionLabel = '21c';
+            else if (version === '23ai') versionLabel = '23ai';
+            const commentPrefix = `# ${osName} ${versionLabel} Environment`;
+            if (os === 'windows') {
+                // Windows batch file style
+                const sid = version === '12cR2' ? 'ORCL12C' : version === '19c' ? 'ORCL19C' : version === '21c' ? 'ORCL21C' : 'ORCL23AI';
+                const home = version === '12cR2' ? '%ORACLE_BASE%/product/12.2.0/dbhome_1' :
+                              version === '19c' ? '%ORACLE_BASE%/product/19.0.0/dbhome_1' :
+                              version === '21c' ? '%ORACLE_BASE%/product/21.0.0/dbhome_1' :
+                              '%ORACLE_BASE%/product/23.0.0/dbhome_1';
+                return `${commentPrefix}\r\nset ORACLE_BASE=${base}\nset ORACLE_HOME=${home}\nset ORACLE_SID=${sid}\nset PATH=%ORACLE_HOME%\\bin;%PATH%\nset LD_LIBRARY_PATH=%ORACLE_HOME%\\lib`;
+            } else {
+                // Linux (default)
+                return getLinuxTemplate(version, base, commentPrefix, true);
+            }
+        }
+        function getLinuxTemplate(version, base, commentPrefix = '# Linux', skipEnvWord) {
+            const sid = version === '12cR2' ? 'ORCL12C' : version === '19c' ? 'ORCL19C' : version === '21c' ? 'ORCL21C' : 'ORCL23AI';
+            const home = version === '12cR2' ? '$ORACLE_BASE/product/12.2.0/dbhome_1' :
+                          version === '19c' ? '$ORACLE_BASE/product/19.0.0/dbhome_1' :
+                          version === '21c' ? '$ORACLE_BASE/product/21.0.0/dbhome_1' :
+                          '$ORACLE_BASE/product/23.0.0/dbhome_1';
+            // Only add 'Environment' if not already present in commentPrefix
+            let comment = commentPrefix;
+            if (!skipEnvWord && !/Environment$/i.test(commentPrefix)) {
+                comment += ' Environment';
+            }
+            return `${comment}\nexport ORACLE_BASE=${base}\nexport ORACLE_HOME=${home}\nexport ORACLE_SID=${sid}\nexport PATH=\$ORACLE_HOME/bin:\$PATH\nexport LD_LIBRARY_PATH=\$ORACLE_HOME/lib`;
+        }
+        // ORACLE_BASE options by OS
+        const oracleBaseOptions = {
+            linux: [
+                { value: '/u01/app/oracle', label: '/u01/app/oracle' },
+                { value: '/opt/oracle', label: '/opt/oracle' }
+            ],
+            windows: [
+                { value: 'C:\\oracle', label: 'C:\\oracle' }
+            ]
+        };
+        function updateOracleBaseOptions() {
+            const os = document.getElementById('os-type').value;
+            const baseSelect = document.getElementById('oracle-base');
+            baseSelect.innerHTML = '<option value="">-- Select ORACLE_BASE --</option>';
+            if (oracleBaseOptions[os]) {
+                oracleBaseOptions[os].forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    baseSelect.appendChild(option);
+                });
+            }
+        }
+        document.getElementById('os-type').addEventListener('change', function() {
+            const os = this.value;
+            const baseSelect = document.getElementById('oracle-base');
+            if (os === 'windows') {
+                baseSelect.innerHTML = '<option value="C:\\oracle">C:\\oracle</option>';
+            } else if (os === 'linux') {
+                baseSelect.innerHTML = '<option value="">-- Select ORACLE_BASE --</option>' +
+                    '<option value="/u01/app/oracle">/u01/app/oracle</option>' +
+                    '<option value="/opt/oracle">/opt/oracle</option>';
+            } else {
+                baseSelect.innerHTML = '<option value="">-- Select ORACLE_BASE --</option>';
+            }
+        });
+        // On page load, ensure ORACLE_BASE is set for default OS
+        document.getElementById('os-type').dispatchEvent(new Event('change'));
+        document.getElementById('generate-btn').onclick = function() {
+            const version = document.getElementById('oracle-version').value;
+            let base = document.getElementById('oracle-base').value;
+            const os = document.getElementById('os-type').value;
+            const errorMsg = document.getElementById('error-msg');
+            const output = document.getElementById('output');
+            // If any field is missing, preload a sample and hide error
+            if (!os || !version || !base) {
+                errorMsg.style.display = 'none';
+                // Preload a sample (Linux 19c, /u01/app/oracle)
+                output.value = oraenvTemplates['19c']('/u01/app/oracle', 'linux');
+                return;
+            }
+            errorMsg.style.display = 'none';
+            output.value = oraenvTemplates[version](base, os);
+        };
+        document.getElementById('copy-btn').onclick = function() {
+            const output = document.getElementById('output');
+            const copyMsg = document.getElementById('copy-msg');
+            if (!output.value) {
+                copyMsg.textContent = 'There is nothing to copy. Please choose the version and click Generate, followed by clicking on the Copy button.';
+                copyMsg.style.display = 'block';
+                setTimeout(() => { copyMsg.style.display = 'none'; }, 3500);
+                return;
+            }
+            navigator.clipboard.writeText(output.value).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = 'Copied!';
+                copyMsg.style.display = 'none';
+                setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+            });
+        };
+        // Theme toggle logic (toggle switch)
+        const themeSwitch = document.getElementById('theme-switch');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeLabel = document.getElementById('theme-label');
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('oraenv-theme', theme);
+            themeSwitch.checked = theme === 'dark';
+            themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
+            themeIcon.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            themeLabel.textContent = theme === 'dark' ? 'Dark Mode' : 'Light Mode';
+        }
+        themeSwitch.onchange = function() {
+            setTheme(themeSwitch.checked ? 'dark' : 'light');
+        };
+        // On load, set theme from localStorage or system preference
+        (function() {
+            const saved = localStorage.getItem('oraenv-theme');
+            if (saved) setTheme(saved);
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+            else setTheme('light');
+        })();
+    </script>
+</body>
+</html>
