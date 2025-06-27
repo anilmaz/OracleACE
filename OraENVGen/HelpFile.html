@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OraENVGen Help</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fb; color: #2d3a4b; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 32px 28px; }
+        h1 { color: #d32f2f; }
+        h2 { color: #0078d4; }
+        ul, ol { margin-left: 24px; }
+        footer { text-align: center; margin: 32px 0 12px 0; color: #d32f2f; font-weight: 600; font-size: 1.08em; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OraENVGen Help & FAQ</h1>
+        <h2>What is OraENVGen?</h2>
+        <p>OraENVGen is a web-based tool to generate Oracle environment variable scripts for Linux and Windows, supporting Oracle 12c, 19c, 21c, and 23ai. It helps you quickly create oraenv/bash profile or Windows batch scripts for your Oracle installations.</p>
+        <h2>How to Use</h2>
+        <ol>
+            <li><b>Select Operating System</b>: Choose Linux or Windows.</li>
+            <li><b>Select Oracle Version</b>: Pick your Oracle Database version.</li>
+            <li><b>Select ORACLE_BASE</b>: Choose the base directory (options change based on OS).</li>
+            <li><b>Click Generate</b>: The script appears in the box below.</li>
+            <li><b>Copy</b>: Use the Copy button to copy the script for use in your environment.</li>
+        </ol>
+        <h2>Script Usage</h2>
+        <ul>
+            <li><b>Linux</b>: Paste the output into your <code>.bash_profile</code> or <code>.bashrc</code>.</li>
+            <li><b>Windows</b>: Save the output as a <code>.bat</code> file and run it to set environment variables.</li>
+        </ul>
+        <h2>Troubleshooting</h2>
+        <ul>
+            <li>If you see a sample script instead of your selection, make sure all dropdowns are selected.</li>
+            <li>The Copy button only works if a script is generated.</li>
+            <li>Light/dark mode preference is saved in your browser.</li>
+        </ul>
+        <h2>More Help</h2>
+        <ul>
+            <li>For issues, visit the <a href="https://github.com/anilmaz/OracleACE/issues" target="_blank">GitHub Issues page</a>.</li>
+            <li>For feature requests, open a GitHub issue or contact the author.</li>
+        </ul>
+    </div>
+    <footer>
+        &copy; Anil Mahadev - Oracle ACE
+    </footer>
+</body>
+</html>
