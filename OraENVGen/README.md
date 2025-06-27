@@ -17,8 +17,6 @@ A modern, easy-to-use web app for generating Oracle environment variable scripts
 3. Click **Generate oraenv**.
 4. Copy the generated script and use it in your `.bash_profile`, `.bashrc`, or as a Windows batch file.
 
-## Demo
-[Live Demo](https://anilmaz.github.io/OracleACE/OraENVGen/)
 
 ## Repository
 [GitHub Repo](https://github.com/anilmaz/OracleACE/tree/main/OraENVGen)
