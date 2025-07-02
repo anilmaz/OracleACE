@@ -11,3 +11,11 @@ While the author may be recognized as an Oracle ACE, this designation is honorar
 
 ### ⚠️ Safe Harbor Statement
 Any forward-looking statements or references to Oracle technologies, features, or roadmaps are purely speculative and should not be interpreted as commitments or guarantees. Oracle product decisions should be based solely on official Oracle documentation and communications.
+
+## Credit
+If you reuse, modify, or redistribute this tool or its code, you **must** credit:
+
+**Anil Mahadev - Oracle ACE**
+
+## License
+MIT License (with required attribution as above)
