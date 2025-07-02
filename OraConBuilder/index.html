@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Oracle Connection Builder</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #e53935 0%, #fff 50%, #1e88e5 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(30, 136, 229, 0.25), 0 2px 8px 0 rgba(229, 57, 53, 0.10);
+      padding: 40px 32px 32px 32px;
+      max-width: 700px; /* Increased width for better layout */
+      width: 100%;
+      margin: 40px 0;
+      text-align: center;
+    }
+    h2 {
+      color: #e53935;
+      margin-bottom: 18px;
+    }
+    label {
+      color: #1e88e5;
+      font-weight: 500;
+      margin-top: 12px;
+      text-align: left;
+      display: block;
+    }
+    input, select, button {
+      display: block;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border: 1.5px solid #1e88e5;
+      background: #f0f7ff;
+    }
+    button {
+      background: linear-gradient(90deg, #e53935 0%, #1e88e5 100%);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #1e88e5 0%, #e53935 100%);
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 16px;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #222;
+      text-align: left;
+      box-shadow: 0 2px 8px 0 rgba(30, 136, 229, 0.08);
+      overflow-x: auto; /* Allow horizontal scroll for long lines */
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .copied {
+      color: #43a047;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .helper {
+      cursor: pointer;
+      font-size: 1.1em;
+      margin-left: 6px;
+      color: #1e88e5;
+      vertical-align: middle;
+      transition: color 0.2s;
+    }
+    .helper:hover {
+      color: #e53935;
+    }
+    @media (max-width: 900px) {
+      .container {
+        max-width: 98vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔗 Oracle Connection String Builder</h2>
+
+    <label for="language">Select Language
+      <span class="helper" title="Choose the client or tool for which you want the Oracle connection string.">❓</span>
+    </label>
+    <select id="language" onchange="updatePreview()">
+      <option value="sqlplus">SQL*Plus (CLI)</option>
+      <option value="sqlcl">SQLcl (CLI)</option>
+      <option value="java">Java (JDBC)</option>
+      <option value="python">Python (cx_Oracle)</option>
+      <option value="dotnet">.NET (C#)</option>
+      <option value="php">PHP (oci8)</option>
+      <option value="go">Go (godror)</option>
+      <option value="node">Node.js (oracledb)</option>
+      <option value="ruby">Ruby (ruby-oci8)</option>
+      <option value="perl">Perl (DBI)</option>
+    </select>
+
+    <label for="host">Host
+      <span class="helper" title="The server address where your Oracle database is hosted. E.g., localhost or an IP address.">🌐</span>
+    </label>
+    <input type="text" id="host" placeholder="e.g. localhost" oninput="updatePreview()" />
+
+    <label for="port">Port
+      <span class="helper" title="The port number for Oracle, usually 1521.">🔢</span>
+    </label>
+    <input type="text" id="port" placeholder="e.g. 1521" oninput="updatePreview()" />
+
+    <label for="service">Service/SID
+      <span class="helper" title="The Oracle Service Name or SID, e.g., ORCL or ORCLPDB1.">🛡️</span>
+    </label>
+    <input type="text" id="service" placeholder="e.g. ORCL or ORCLPDB1" oninput="updatePreview()" />
+
+    <label for="username">Username
+      <span class="helper" title="Your Oracle database username.">👤</span>
+    </label>
+    <input type="text" id="username" placeholder="e.g. admin" oninput="updatePreview()" />
+
+    <label for="password">Password
+      <span class="helper" title="Your Oracle database password. This will be hidden in the preview.">🔒</span>
+    </label>
+    <input type="password" id="password" placeholder="e.g. secret" oninput="updatePreview()" />
+
+    <button onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+    <button onclick="refreshForm()" style="margin-top:5px;background:#fff;color:#e53935;border:1.5px solid #e53935;">🔄 Refresh</button>
+    <span id="copiedStatus" class="copied" style="display:none;">Copied!</span>
+
+    <h3 style="color:#1e88e5;">Generated Code Snippet <span class="helper" title="This is the connection string or code snippet you can use in your app or tool.">💡</span></h3>
+    <pre id="outputPreview"></pre>
+
+    <div style="margin:24px 0 0 0;text-align:center;">
+      <a href="Help.html" target="_blank" style="display:inline-block;padding:10px 22px;margin:8px 4px;background:#1e88e5;color:#fff;border-radius:6px;text-decoration:none;font-weight:bold;box-shadow:0 2px 8px 0 rgba(30,136,229,0.10);transition:background 0.2s;">❓ Help &amp; Usage Guide</a>
+      <a href="README.md" target="_blank" style="display:inline-block;padding:10px 22px;margin:8px 4px;background:#e53935;color:#fff;border-radius:6px;text-decoration:none;font-weight:bold;box-shadow:0 2px 8px 0 rgba(229,57,53,0.10);transition:background 0.2s;">📄 README</a>
+    </div>
+  </div>
+
+  <div style="margin:48px 0 12px 0;font-size:1.05em;color:#888;text-align:center;font-weight:bold;">
+    &copy; 2025 Anil Mahadev - Oracle ACE
+  </div>
+
+  <script>
+    // Templates for different languages with placeholders
+    const templates = {
+      python: "cx_Oracle.connect('{username}/{password}@{host}:{port}/{service}')",
+      java: "jdbc:oracle:thin:@{host}:{port}:{service}",
+      dotnet: "User Id={username};Password={password};Data Source={host}:{port}/{service};",
+      php: "$conn = oci_connect('{username}', '{password}', '{host}:{port}/{service}');",
+      go: `db, err := sql.Open(\"godror\", \"user={username} password={password} connectString={host}:{port}/{service}\")`,
+      node: `oracledb.getConnection({{ user: '{username}', password: '{password}', connectString: '{host}:{port}/{service}' }}, cb);`,
+      ruby: "conn = OCI8.new('{username}', '{password}', '{host}:{port}/{service}')",
+      perl: "my $dbh = DBI->connect('dbi:Oracle://{host}:{port}/{service}', '{username}', '{password}');",
+      sqlplus: "sqlplus {username}/{password}@{host}:{port}/{service}",
+      sqlcl: "sql /nolog\nconnect {username}/{password}@{host}:{port}/{service}"
+    };
+
+    // Updates the preview area with the generated connection string
+    function updatePreview() {
+      const lang = document.getElementById("language").value;
+      let template = templates[lang];
+
+      // Gather user input values
+      const replacements = {
+        "{host}": document.getElementById("host").value,
+        "{port}": document.getElementById("port").value,
+        "{service}": document.getElementById("service").value,
+        "{username}": document.getElementById("username").value,
+        // Replace password with asterisks in the output
+        "{password}": document.getElementById("password").value ? "***" : ""
+      };
+
+      // Replace all placeholders in the template (global replacement)
+      for (let token in replacements) {
+        // Use RegExp to replace all occurrences of the token
+        template = template.replace(new RegExp(token, 'g'), replacements[token]);
+      }
+
+      // Display the generated connection string
+      document.getElementById("outputPreview").textContent = template;
+      // Hide the 'Copied!' status when preview updates
+      document.getElementById("copiedStatus").style.display = "none";
+    }
+
+    // Copies the generated string to clipboard and shows status
+    function copyToClipboard() {
+      const lang = document.getElementById("language").value;
+      let template = templates[lang];
+
+      // Gather user input values (use real password for clipboard)
+      const replacements = {
+        "{host}": document.getElementById("host").value,
+        "{port}": document.getElementById("port").value,
+        "{service}": document.getElementById("service").value,
+        "{username}": document.getElementById("username").value,
+        "{password}": document.getElementById("password").value
+      };
+
+      // Replace all placeholders in the template (global replacement)
+      for (let token in replacements) {
+        template = template.replace(new RegExp(token, 'g'), replacements[token]);
+      }
+
+      navigator.clipboard.writeText(template).then(() => {
+        document.getElementById("copiedStatus").style.display = "inline";
+      });
+    }
+
+    // Refreshes the form and clears the output
+    function refreshForm() {
+      document.getElementById("host").value = "";
+      document.getElementById("port").value = "";
+      document.getElementById("service").value = "";
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("outputPreview").textContent = "";
+      document.getElementById("copiedStatus").style.display = "none";
+      document.getElementById("language").selectedIndex = 0;
+    }
+
+    updatePreview(); // Initial preview on page load
+  </script>
+</body>
+</html>
